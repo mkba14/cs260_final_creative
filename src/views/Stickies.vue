@@ -5,27 +5,30 @@
     class-name-resizable="my-active-class"
     class-name-active="my-active-class"-->
     <vue-draggable-resizable
-     class-name-dragging="my-dragging-class" 
-     class-name-resizing="my-resizing-class"
-     class-name="my-class"
-    
+        class-name-dragging = "my-dragging-class"
+        class-name-resizing = "my-resizing-class"
+        class-name="my-class"
     
         v-for="element in elements"
         :key="element.id"
         :x="element.x"
         :y="element.y"
-        :w="100" 
-        :h="100"
+        :w="element.width" 
+        :h="element.width"
         :minHeight="100"
         :minWidth="100"
         
         :resizable = "true"
-        z-index = "element.zindex"
-        @dragging="(left, top) => dragging(element.id, left, top)" 
+        v-bind:z-index = "element.zindex"
+        
         @resizing="(left, top, width, height) => resizing(element.id, left, top, width, height)" 
+        @dragging="(left, top) => dragging(element.id, left, top)" 
         :parent="true"
     >
-      <p>Hello! I'm a flexible component. You can drag me around and you can resize me.<br>
+      <p>
+          {{element.text}}<br>
+          z = {{element.zindex}}, {{current_zim}}
+          <br>
       X: {{ element.x }} / Y: {{ element.y }} - Width: {{ element.width }} / Height: {{ element.height }}</p>
     </vue-draggable-resizable>
     
@@ -33,8 +36,6 @@
 </template>
 
 <script>
-    //import VueDraggableResizable from 'vue-draggable-resizable'
-
     export default {
         data() {
             return {
@@ -43,11 +44,16 @@
                 prevOffsetX: 0,
                 prevOffsetY: 0,
                 elements: [
-                    { id: 1, x: 0, y: 0, width: 0, height: 0, zindex: 0, text: 'Element 1' },
-                    { id: 2, x: 200, y: 200, width: 0, height: 0, zindex: 1, text: 'Element 2' },
-                    { id: 3, x: 0, y: 200, width: 0, height: 0, zindex: 2, text: 'Element 3' },
-                ]
+                    { id: 1, x: 0, y: 0, width: 100, height: 100, zindex: 0, text: 'Element 1' },
+                    { id: 2, x: 200, y: 200, width: 100, height: 100, zindex: 1, text: 'Element 2' },
+                    { id: 3, x: 0, y: 200, width: 100, height: 100, zindex: 2, text: 'Element 3' },
+                ],
+                z_index_max: 0,
+                current_zim: -1,
             }
+        },
+        created(){
+          this.z_index_max = this.elements.length;  
         },
         mounted() {
             window.addEventListener('keydown', ev => {
@@ -64,7 +70,9 @@
 
         methods: {
             dragging(id, left, top) {
+                this.current_zim = this.elements.length;
                 this.draggingId = id;
+
 
                 if (!this.sync) return;
 
@@ -76,8 +84,11 @@
 
                 this.elements.map(el => {
                     if (el.id !== id) {
+                        el.zindex = this.z_index_max;
                         el.x += deltaX;
                         el.y += deltaY;
+                        this.current_zim = el.zindex;
+                        this.elements.id.zindex = this.current_zim;
                     }
 
                     return el;
@@ -112,60 +123,96 @@
                 this.prevOffsetY = offsetY;
 
                 return ret;
-            }
+            },
         },
         computed: {
             draggingElement: function() {
                 if (!this.draggingId) return;
-
                 return this.elements.find(el => el.id === this.draggingId);
-            }
+            },
+        },
+        watch: {
+            elements: function() {
+                this.z_index_max = this.elements.length; 
+                return;
+            },
         }
+        
     }
 </script>
 
 <style>
-    .my-active-class {
-        background-color: lightblue;
-        border: 1px solid black;
-    }
 
-    .item {
-        display: flex;
-        background-color: green;
-        overflow: auto;
-        /* scollbars where necessary*/
-        /*scroll;*/
-        /* scrollbars on row & column; not necssary*/
-        /*hidden;*/
-        /* hide overflow*/
-    }
+.prevent_overflow{
+    overflow: hidden;
+}
 
-    .my-class {
-        background-color: lightgreen;
-        overflow: auto;
-        -webkit-transition: background-color 200ms linear;
-        -ms-transition: background-color 200ms linear;
-        transition: background-color 200ms linear;
-        border: 1px solid black;
-    }
 
-    .my-dragging-class {
-        background-color: violet;
-        border: 1px solid black;
-    }
+/* I am toggling between hidden and visible for hover/not-hover
+    because the vue-draggable-resizable handles are hidden 
+    when the overflow is hidden 
+    */
+.my-class {
+  color: black;
 
-    .my-resizing-class {
-        background-color: lightpink;
-        border: 1px solid black;
-    }
+  overflow: hidden;
+  background-color: lightgreen;
+  -webkit-transition: background-color 200ms linear;
+  -ms-transition: background-color 200ms linear;
+  transition: background-color 200ms linear;
+  border: 1px solid black;
+}
+/* I am toggling between hidden and visible for hover/not-hover
+    because the vue-draggable-resizable handles are hidden 
+    when the overflow is hidden 
+    */
+    
+.my-class {
+    position: relative;
+}
+/*target*/
+.my-class:hover{
+    /*overflow: auto;*/
+    overflow: visible;
+    border-bottom: none;
+}
 
-    .overlay {
-        background-color: #ccc;
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        left: 0px;
-        z-index: 0;
-    }
+
+
+.my-class:active{
+    opacity: 0.8;
+}
+/*
+.my-class > p:hover {
+     border: 1px solid black;
+     border-top: none;
+     border-bottom: none;
+}
+*/
+
+
+.my-dragging-class {
+  background-color: violet;
+  border: 1px solid black;
+}
+
+.my-resizing-class {
+  background-color: lightblue;
+  border: 1px solid black;
+}
+
+.overlay {
+  background-color: #ccc;
+  position: fixed;
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  height: 80%;
+  left: 0px;
+  z-index: 0;
+  /*
+  overflow-y: hidden;
+  overflow-x: visible;
+  */
+}
 </style>
