@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Stickies from "../views/Stickies.vue";
 import About from "../views/About.vue";
+import stick_active from "../views/stick_active.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -25,6 +26,10 @@ const routes = [
     name: "stickies",
     component: Stickies,// () => 
     //import()
+  },
+  {path: "/active",
+  name: "active",
+  component: stick_active,
   }
 ];
 

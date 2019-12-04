@@ -4,38 +4,11 @@
     <!--class-name-draggable="my-active-class"
     class-name-resizable="my-active-class"
     class-name-active="my-active-class"-->
-    <vue-draggable-resizable
-        class-name-dragging = "my-dragging-class"
-        class-name-resizing = "my-resizing-class"
-        class-name-active="my-active-class"
-        class-name="my-class"
-    
-        v-for="element in elements"
-        :key="element.id"
-        :x="element.x"
-        :y="element.y"
-        :w="element.width" 
-        :h="element.width"
-        :minHeight="100"
-        :minWidth="100"
-        
-        :resizable = "true"
-        v-bind:z-index = "element.zindex"
-        
-        @resizing="(left, top, width, height) => resizing(element.id, left, top, width, height)" 
-        @dragging="(left, top) => dragging(element.id, left, top)" 
-        @activated="onActivated"
-        @deactivated="onDeactivated"
-        :parent="false"
-        :drag-hangle="'.drag-handle'"
-    >
-        <div class="drag-handle">{{element.title}}</div>
-      <p>
-          {{element.text}}<br>
-          z = {{element.zindex}}, {{current_zim}}
-          <br>
-      X: {{ element.x }} / Y: {{ element.y }} - Width: {{ element.width }} / Height: {{ element.height }}</p>
+   <div class="overlay">
+    <vue-draggable-resizable :active.sync="active">
+        <p>Controlling the active state from outside the component by providing the <b>:active</b> prop.</p>
     </vue-draggable-resizable>
+</div>
     
   </div>
   
@@ -51,18 +24,17 @@
                 prevOffsetY: 0,
                 elements: [
                     { id: 1, title: 'Element 1', x: 0, y: 0, width: 100, height: 100, zindex: 0, text: 'Element 1' },
-                    { id: 2, title: 'Element 1', x: 200, y: 200, width: 100, height: 100, zindex: 1, text: 'Element 2' },
-                    { id: 3, title: 'Element 1', x: 0, y: 200, width: 100, height: 100, zindex: 2, text: 'Element 3' },
+                    { id: 2,title: 'Element 1',  x: 200, y: 200, width: 100, height: 100, zindex: 1, text: 'Element 2' },
+                    { id: 3,title: 'Element 1',  x: 0, y: 200, width: 100, height: 100, zindex: 2, text: 'Element 3' },
                 ],
                 z_index_max: 0,
                 current_zim: -1,
             }
         },
-        created() {
-            this.z_index_max = this.elements.length;
+        created(){
+          this.z_index_max = this.elements.length;  
         },
         mounted() {
-
             window.addEventListener('keydown', ev => {
                 if (ev.keyCode === 17) {
                     this.sync = true;
@@ -76,12 +48,6 @@
         },
 
         methods: {
-            onActivated() {
-                this.active = true
-            },
-            onDeactivated() {
-                this.active = false
-            },
             dragging(id, left, top) {
                 this.current_zim = this.elements.length;
                 this.draggingId = id;
@@ -100,11 +66,11 @@
                         el.zindex = this.z_index_max;
                         el.x += deltaX;
                         el.y += deltaY;
-
-                        if (el.y < 0) {
+                        
+                        if(el.y < 0){
                             el.y = 0;
                         }
-                        if (el.x < 0) {
+                        if(el.x < 0){
                             el.x = 0;
                         }
                         console.log(el.x, el.y);
@@ -154,56 +120,56 @@
         },
         watch: {
             elements: function() {
-                this.z_index_max = this.elements.length;
+                this.z_index_max = this.elements.length; 
                 return;
             },
         }
-
+        
     }
 </script>
 
 <style>
-    .prevent_overflow {
-        overflow: hidden;
-    }
+
+.prevent_overflow{
+    overflow: hidden;
+}
 
 
-    /* I am toggling between hidden and visible for hover/not-hover
+/* I am toggling between hidden and visible for hover/not-hover
     because the vue-draggable-resizable handles are hidden 
     when the overflow is hidden 
     */
+.my-class {
+  color: black;
 
-    .my-class {
-        color: black;
-
-        overflow: auto;
-        background-color: lightgreen;
-        -webkit-transition: background-color 200ms linear;
-        -ms-transition: background-color 200ms linear;
-        transition: background-color 200ms linear;
-        border: 1px solid black;
-        display: inline-block;
-    }
-
-    /* I am toggling between hidden and visible for hover/not-hover
+  overflow: hidden;
+  background-color: lightgreen;
+  -webkit-transition: background-color 200ms linear;
+  -ms-transition: background-color 200ms linear;
+  transition: background-color 200ms linear;
+  border: 1px solid black;
+}
+/* I am toggling between hidden and visible for hover/not-hover
     because the vue-draggable-resizable handles are hidden 
     when the overflow is hidden 
     */
+    
+.my-class {
+    position: relative;
+}
+/*target*/
+.my-class:hover{
+    /*overflow: auto;*/
+    overflow: visible;
+    border-bottom: none;
+}
 
-    .my-class {
-        position: relative;
-    }
+
+
+.my-class:active{
+    opacity: 0.8;
+}
 /*
-    .my-active-class {
-        border: 1px solid black;
-        -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
-        -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
-        box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
-        overflow: visible;
-        border-bottom: none;
-    }
-
-    /*
 .my-class > p:hover {
      border: 1px solid black;
      border-top: none;
@@ -212,31 +178,31 @@
 */
 
 
-    .my-dragging-class {
-        background-color: violet;
-        border: 1px solid black;
-    }
+.my-dragging-class {
+  background-color: violet;
+  border: 1px solid black;
+}
 
-    .my-resizing-class {
-        background-color: red;
-        border: 1px solid black;
-    }
+.my-resizing-class {
+  background-color: lightblue;
+  border: 1px solid black;
+}
 
-    .overlay {
-        background-color: #ccc;
-        position: fixed;
-        width: 90%;
-        margin-left: 5%;
-        margin-right: 5%;
-        height: 80%;
-        left: 0px;
-        z-index: 0;
-        overflow: scroll;
-        overflow-x: scroll;
-        overflow-y: scroll;
-        /*
+.overlay {
+  background-color: #ccc;
+  position: fixed;
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  height: 80%;
+  left: 0px;
+  z-index: 0;
+  overflow: scroll;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  /*
   overflow-y: hidden;
   overflow-x: visible;
   */
-    }
+}
 </style>
