@@ -13,7 +13,7 @@
         class-name="my-class"
         class-name-active="my-active-class"
         v-for="element in elements"
-        :key="element.id"
+        :key="element._id"
         :x="element.x"
         :y="element.y"
         :w="element.width"
@@ -24,10 +24,10 @@
         :max-height="1000"
         :resizable="true"
         :z-index="element.z_index"
-        @resizing="(left, top, width, height) => resizing(element.id, left, top, width, height)" 
+        @resizing="(left, top, width, height) => resizing(element._id, left, top, width, height)" 
 
-        @dragging="(left, top) => dragging(element.id, left, top)"
-        @dragstop="(left, top) => dragstop(element.id, left, top)"
+        @dragging="(left, top) => dragging(element._id, left, top)"
+        @dragstop="(left, top) => dragstop(element._id, left, top)"
       >
           <!--<vue-draggable-resizable
           :w="element.width"
@@ -121,12 +121,13 @@ import axios from 'axios';
 
                 const offsetX = left - this.draggingElement.x;
                 const offsetY = top - this.draggingElement.y;
+                
 
                 const deltaX = this.deltaX(offsetX);
                 const deltaY = this.deltaY(offsetY);
-                //this.elements.id.z_index = 100 + left;
+                //this.elements._id.z_index = 100 + left;
                 this.elements.map(el => {
-                    if (el.id !== id) {
+                    if (el._id !== id) {
                         el.x += deltaX;
                         el.y += deltaY;
                         if (el.x < 0) {
@@ -143,7 +144,7 @@ import axios from 'axios';
             },
             dragstop(id, left, top) {
                 this.elements.map(el => {
-                    if (el.id === id) {
+                    if (el._id === id) {
                         el.x = left;
                         el.y = top;
                         //el.z_index = 100;
@@ -173,7 +174,7 @@ import axios from 'axios';
 
             resizing(id, left, top, width, height) {
                 this.elements.map(el => {
-                    if (el.id === id) {
+                    if (el._id === id) {
                         el.x = left;
                         el.y = top;
                         el.width = width;
@@ -192,7 +193,7 @@ import axios from 'axios';
             draggingElement: function() {
                 if (!this.draggingId) return;
 
-                return this.elements.find(el => el.id === this.draggingId);
+                return this.elements.find(el => el._id === this.draggingId);
             }
         }
     }
