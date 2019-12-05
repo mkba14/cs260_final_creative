@@ -1,5 +1,14 @@
 <template>
     <div>
+        <div>Make New Stickie!</div>
+        <form>
+            <input v-model="title" placeholder="title">
+            <br>
+            <textarea v-model="text" placeholder="description" rows="4" cols="50"></textarea>
+            <br>
+            <button @click="addSticky">Make New Sticky :)</button>
+        </form>
+        
       <vue-draggable-resizable
         class-name="my-class"
         class-name-active="my-active-class"
@@ -43,6 +52,9 @@
 </template>
 
 <script>
+/* global axios*/
+import axios from 'axios';
+
     export default {
         data() {
             return {
@@ -50,11 +62,14 @@
                 draggingId: null,
                 prevOffsetX: 0,
                 prevOffsetY: 0,
-                elements: [
-                    { id: 1, x: 0, y: 0, height: 100, width: 100, text: 'Element 1', z_index: 0 },
-                    { id: 2, x: 200, y: 200, height: 10, width: 100, text: 'Element 2', z_index: 1 }
-                ]
+                elements: [],
+                title: "",
+                text: "",
+                
             }
+        },
+        created(){
+            this.getStickies();
         },
         mounted() {
             window.addEventListener('keydown', ev => {
@@ -69,6 +84,36 @@
             });
         },
         methods: {
+            async getStickies() {
+                try {
+                    console.log("get stickies");
+                    let response = await axios.get("/api/notes");
+                    this.elements = response.data;
+                    return true;
+                }
+                catch (error) {
+                    console.log("error in getting stickies");
+                    console.log(error);
+                }
+            },
+            async addSticky() {
+                console.log("upload");
+                try {
+
+                    let r2 = await axios.post('/api/notes', {
+                        title: this.title,
+                        text: this.text
+                    });
+                    this.text = "";
+                    this.title = "";
+                }
+                catch (error) {
+                    console.log("What doesn't it work?");
+                    console.log(error);
+                }
+                this.getStickies();
+            },
+
             dragging(id, left, top) {
                 this.draggingId = id;
 
@@ -84,10 +129,10 @@
                     if (el.id !== id) {
                         el.x += deltaX;
                         el.y += deltaY;
-                        if(el.x < 0){
+                        if (el.x < 0) {
                             el.x = 0;
                         }
-                        if(el.y < 0){
+                        if (el.y < 0) {
                             el.y = 0;
                         }
                         //el.z_index = 100;
@@ -159,7 +204,8 @@
         border: 1px solid blue;
         /*overflow: hidden;*/
     }
-    .scrollable{
+
+    .scrollable {
         background-color: lightblue;
         opacity: 80%;
         height: 100%;
