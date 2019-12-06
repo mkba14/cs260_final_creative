@@ -1,6 +1,5 @@
 <template>
     <div class = "overlay">
-        
         <div class="toggle" @click="toggleStickyMkr">Make New Stickie!</div>
         <div v-if="mkStickies">
         <form class = "myStickyForm">
@@ -304,6 +303,10 @@
     background-color: white;
     height: 80%;
 }
+.toggle{
+    background-color: white;
+}
+
 .toggle:hover{
     background-color: blue;
     color: white;

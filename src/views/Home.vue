@@ -1,18 +1,47 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <div >
+    <br>
+    <h1>Welcome to STICKIES!</h1>
+    <br>
+    <br>
+    <img src="../assets/icon.jpg" alt="logo" height="30%" width="30%" padding-right="10%">
+    <br>
+    <br>
+    <button>
+      <a href="/stickies" class="button">Go to your sticky board!</a>
+    </button>
+    <br>
+    <br><br>
+    <br><br>
+    <br><br>
+    <br><br>
+    <br>
+      
+    </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+  // @ is an alias to /src
+  import HelloWorld from '@/components/HelloWorld.vue'
 
-export default {
-  name: 'home',
-  components: {
-    HelloWorld
+  export default {
+    name: 'home',
+    components: {
+      HelloWorld
+    }
   }
-}
 </script>
+
+<style>
+  .button {
+    background-color: navy;
+    /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
+</style>
