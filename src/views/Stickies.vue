@@ -76,7 +76,6 @@
                 title: "",
                 text: "",
                 mkStickies: false,
-
             }
         },
         created() {
@@ -306,6 +305,8 @@
     height: 80%;
 }
 .toggle:hover{
+    background-color: blue;
+    color: white;
     cursor: pointer;
 }
 .lala{
