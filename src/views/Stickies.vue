@@ -1,57 +1,63 @@
 <template>
-    <div>
-        <div>Make New Stickie!</div>
-        <form>
+    <div class = "overlay">
+        
+        <div class="toggle" @click="toggleStickyMkr">Make New Stickie!</div>
+        <div v-if="mkStickies">
+        <form class = "myStickyForm">
             <input v-model="title" placeholder="title">
             <br>
             <textarea v-model="text" placeholder="description" rows="4" cols="50"></textarea>
             <br>
             <button @click="addSticky">Make New Sticky :)</button>
         </form>
-        
-      <vue-draggable-resizable
-        class-name="my-class"
-        class-name-active="my-active-class"
-        v-for="element in elements"
-        :key="element._id"
-        :x="element.x"
-        :y="element.y"
-        :w="element.width"
-        :h="element.height"
-        :min-width="50"
-        :min-height="50"
-        :max-width="1000"
-        :max-height="1000"
-        :resizable="true"
-        :z-index="element.z_index"
-        @resizing="(left, top, width, height) => resizing(element._id, left, top, width, height)" 
-
-        @dragging="(left, top) => dragging(element._id, left, top)"
-        @dragstop="(left, top) => dragstop(element._id, left, top)"
-      >
-          
-          <!--<vue-draggable-resizable
-          :w="element.width"
-          :h="element.height"
-          :resizable="true"
-          :draggable="false"-->
-          <div class="top_bar">
-              <button @click="deleteSticky(element)">X</button>
+        </div>
+        <div class = "lala" v-else>
+        <vue-draggable-resizable
+            class-name="my-class"
+            class-name-active="my-active-class"
+            v-for="element in elements"
+            :key="element._id"
+            :x="element.x"
+            :y="element.y"
+            :w="element.width"
+            :h="element.height"
+            :min-width="50"
+            :min-height="50"
+            :max-width="1000"
+            :max-height="1000"
+            :resizable="true"
+            :z-index="element.z_index"
+            :parent="true"
+            @resizing="(left, top, width, height) => resizing(element._id, left, top, width, height)" 
+    
+            @dragging="(left, top) => dragging(element._id, left, top)"
+            @dragstop="(left, top) => dragstop(element._id, left, top)"
+          >
+              
+              <!--<vue-draggable-resizable
+              :w="element.width"
+              :h="element.height"
+              :resizable="true"
+              :draggable="false"-->
+              <div class="top_bar">
+                  
+                  <button @click="deleteSticky(element)">X</button>
+              </div>
+              <div
+              class = "scrollable">
+                <h3 class="left">{{element.title}}
+                </h3>
+                <p>{{ element.text }}
+                <br>
+                X: {{ element.x }} / Y: {{ element.y }} 
+                <br>
+                Width: {{ element.width }} / Height: {{ element.height }}
+                </p>
+                </div>
+              <!--</vue-draggable-resizable>-->
+    
+          </vue-draggable-resizable>
           </div>
-          <div
-          class = "scrollable">
-            <h3>{{element.title}}
-            </h3>
-            <p>{{ element.text }}
-            <br>
-            X: {{ element.x }} / Y: {{ element.y }} 
-            <br>
-            Width: {{ element.width }} / Height: {{ element.height }}
-            </p>
-            </div>
-          <!--</vue-draggable-resizable>-->
-
-      </vue-draggable-resizable>
     </div>
 </template>
 
@@ -69,6 +75,7 @@
                 elements: [],
                 title: "",
                 text: "",
+                mkStickies: false,
 
             }
         },
@@ -88,6 +95,14 @@
             });
         },
         methods: {
+            toggleStickyMkr() {
+                if (this.mkStickies === false) {
+                    this.mkStickies = true;
+                }
+                else {
+                    this.mkStickies = false;
+                }
+            },
             async getStickies() {
                 try {
                     console.log("get stickies");
@@ -121,7 +136,7 @@
             async deleteSticky(sticky) {
                 try {
                     console.log("deleting sticky: ", sticky);
-                    let response = await axios.delete('/api/notes/' + sticky._id);
+                    await axios.delete('/api/notes/' + sticky._id);
                     this.getStickies();
                     return true;
                 }
@@ -132,8 +147,8 @@
 
             async editSticky(sticky) {
                 try {
-                    console.log("Edit ", sticky);
-                    let response = await axios.put("/api/notes/" +
+                    //console.log("Edit ", sticky);
+                    await axios.put("/api/notes/" +
                         sticky._id, {
                             x: sticky.x,
                             y: sticky.y,
@@ -144,6 +159,7 @@
                     return true;
                 }
                 catch (error) {
+                    console.log("Cannot edit:")
                     console.log(error);
                 }
             },
@@ -214,7 +230,7 @@
                         el.height = height;
                         this.editSticky(el);
                     }
-                    
+
 
                     return el;
                 });
@@ -222,7 +238,7 @@
                 this.draggingId = null;
                 this.prevOffsetX = 0;
                 this.prevOffsetY = 0;
-                
+
             }
         },
         computed: {
@@ -242,19 +258,57 @@
         /*overflow: hidden;*/
     }
 
-    .top_bar {
-        height: 20%;
-    }
+
 
     .scrollable {
         background-color: lightblue;
         /*opacity: 80%;*/
-        height: 80%;
+        height: 100%;
         width: 100%;
         overflow: auto;
     }
 
     .top_bar>button {
-        height: 100%;
+        float: right;
+        height: 10px;
     }
+
+    button {
+        cursor: pointer;
+    }
+
+    .board {
+        height: 100%;
+        width: 100%;
+        background-color: black;
+    }
+
+    .overlay {
+        background-color: #ccc;
+        position: fixed;
+        width: 90%;
+        height: 80%;
+        margin-left: 5%;
+        margin-right: 5%;
+        left: 0px;
+        z-index: 0;
+        overflow: scroll;
+        overflow-x: scroll;
+        overflow-y: scroll;
+        /*
+  overflow-y: hidden;
+  overflow-x: visible;
+  */
+    }
+
+.myStickyForm{
+    background-color: white;
+    height: 80%;
+}
+.toggle:hover{
+    cursor: pointer;
+}
+.lala{
+    height: 100%;
+}
 </style>
