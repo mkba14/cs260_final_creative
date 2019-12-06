@@ -29,6 +29,9 @@
         @dragging="(left, top) => dragging(element._id, left, top)"
         @dragstop="(left, top) => dragstop(element._id, left, top)"
       >
+          <div>
+              <button @click="deleteSticky">X</button>
+          </div>
           <!--<vue-draggable-resizable
           :w="element.width"
           :h="element.height"
@@ -100,7 +103,7 @@ import axios from 'axios';
                 console.log("upload");
                 try {
 
-                    let r2 = await axios.post('/api/notes', {
+                    await axios.post('/api/notes', {
                         title: this.title,
                         text: this.text
                     });
@@ -112,6 +115,10 @@ import axios from 'axios';
                     console.log(error);
                 }
                 this.getStickies();
+            },
+            
+            async deleteSticky(){
+                
             },
 
             dragging(id, left, top) {

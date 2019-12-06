@@ -62,4 +62,21 @@ router.delete('/:id', async(req, res) => {
   }
 });
 
+router.put('/:id', async(req, res) =>{
+  try{
+    let note = await Note.findOne({
+      _id: req.params.id,
+    });
+    note.x = req.body.x;
+    note.y = req.body.y;
+    note.width = req.body.width;
+    note.height = req.body.height;
+    note.save();
+  }
+  catch(error){
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
 module.exports = router;
