@@ -1,6 +1,6 @@
 <template>
     <div class = "overlay">
-        <div class="toggle" @click="toggleStickyMkr">Make New Stickie!</div>
+        <div class="toggle" @click="toggleStickyMkr">Make New Sticky!</div>
         <div v-if="mkStickies">
         <form class = "myStickyForm">
             <input v-model="title" placeholder="title">

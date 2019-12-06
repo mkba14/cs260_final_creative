@@ -2,7 +2,8 @@
   <div class="about">
     <h1>Welcome to Stickies!</h1>
     <h2>A page for you to make notes</h2>
-    <h2>and keep track of importan things</h2>
+    <h2>and keep track of important things</h2>
+    
     
     <br>
     <br>
@@ -26,6 +27,12 @@
             </div>
           </div>
       </div>
+      
+      <br><br><br><br><br><br>
+      <p>Please note we made our own icon.</p>
+    <p>and what your mouse does when it hovers over the</p>
+    <p>"New Sticky" button on the Sticky page :)</p>
+      <br><br><br><br><br><br>
     </div>
     
   </div>
