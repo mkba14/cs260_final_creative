@@ -29,18 +29,19 @@
         @dragging="(left, top) => dragging(element._id, left, top)"
         @dragstop="(left, top) => dragstop(element._id, left, top)"
       >
-          <div>
-              <button @click="deleteSticky">X</button>
-          </div>
+          
           <!--<vue-draggable-resizable
           :w="element.width"
           :h="element.height"
           :resizable="true"
           :draggable="false"-->
+          <div class="top_bar">
+              <button @click="deleteSticky(element)">X</button>
+          </div>
           <div
-          class = "scrollable" style="width:element.width, height:element.height">
-            <h1>{{element.title}}
-            </h1>
+          class = "scrollable">
+            <h3>{{element.title}}
+            </h3>
             <p>{{ element.text }}
             <br>
             X: {{ element.x }} / Y: {{ element.y }} 
@@ -55,8 +56,8 @@
 </template>
 
 <script>
-/* global axios*/
-import axios from 'axios';
+    /* global axios*/
+    import axios from 'axios';
 
     export default {
         data() {
@@ -68,10 +69,10 @@ import axios from 'axios';
                 elements: [],
                 title: "",
                 text: "",
-                
+
             }
         },
-        created(){
+        created() {
             this.getStickies();
         },
         mounted() {
@@ -116,11 +117,36 @@ import axios from 'axios';
                 }
                 this.getStickies();
             },
-            
-            async deleteSticky(){
-                
+
+            async deleteSticky(sticky) {
+                try {
+                    console.log("deleting sticky: ", sticky);
+                    let response = await axios.delete('/api/notes/' + sticky._id);
+                    this.getStickies();
+                    return true;
+                }
+                catch (error) {
+                    console.log(error);
+                }
             },
 
+            async editSticky(sticky) {
+                try {
+                    console.log("Edit ", sticky);
+                    let response = await axios.put("/api/notes/" +
+                        sticky._id, {
+                            x: sticky.x,
+                            y: sticky.y,
+                            height: sticky.height,
+                            width: sticky.width
+                        });
+                    this.getStickies();
+                    return true;
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            },
             dragging(id, left, top) {
                 this.draggingId = id;
 
@@ -128,7 +154,7 @@ import axios from 'axios';
 
                 const offsetX = left - this.draggingElement.x;
                 const offsetY = top - this.draggingElement.y;
-                
+
 
                 const deltaX = this.deltaX(offsetX);
                 const deltaY = this.deltaY(offsetY);
@@ -154,9 +180,9 @@ import axios from 'axios';
                     if (el._id === id) {
                         el.x = left;
                         el.y = top;
+                        this.editSticky(el);
                         //el.z_index = 100;
                     }
-
                     return el;
                 });
 
@@ -186,7 +212,9 @@ import axios from 'axios';
                         el.y = top;
                         el.width = width;
                         el.height = height;
+                        this.editSticky(el);
                     }
+                    
 
                     return el;
                 });
@@ -194,6 +222,7 @@ import axios from 'axios';
                 this.draggingId = null;
                 this.prevOffsetX = 0;
                 this.prevOffsetY = 0;
+                
             }
         },
         computed: {
@@ -213,11 +242,19 @@ import axios from 'axios';
         /*overflow: hidden;*/
     }
 
+    .top_bar {
+        height: 20%;
+    }
+
     .scrollable {
         background-color: lightblue;
-        opacity: 80%;
-        height: 100%;
+        /*opacity: 80%;*/
+        height: 80%;
         width: 100%;
         overflow: auto;
+    }
+
+    .top_bar>button {
+        height: 100%;
     }
 </style>

@@ -1,14 +1,16 @@
 
 // vue.config.js
+let domain = 'cs260.mka11en.com' //'assignments.primbu.com'
+let server = 'http://'+domain+':3005'
 module.exports = {
     // options...
     devServer: {
         useLocalIp: false,
-        public: 'http://assignments.primbu.com:3005',
+        public: server,
         disableHostCheck: true,
         proxy: {
             '^/api': {
-                target: 'http://assignments.primbu.com:3005',
+                target: server,
             },
         },
     }
