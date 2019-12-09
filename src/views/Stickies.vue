@@ -3,6 +3,8 @@
         <div class="toggle" @click="toggleStickyMkr">Make New Sticky!</div>
         <div v-if="mkStickies">
         <form class = "myStickyForm">
+            <br>
+            <br>
             <input v-model="title" placeholder="title">
             <br>
             <textarea v-model="text" placeholder="description" rows="4" cols="50"></textarea>
@@ -143,7 +145,8 @@
                 try {
                     console.log("deleting sticky: ", sticky);
                     await axios.delete('/api/notes/' + sticky._id);
-                    this.getStickies();
+                    await this.getStickies();
+                    console.log("remaining stickies: ", this.elements);
                     return true;
                 }
                 catch (error) {
@@ -313,7 +316,13 @@
 
     .myStickyForm {
         background-color: white;
+        background-color: lightgray;
         height: 80%;
+        position: fixed;
+        margin-left: auto;
+        margin-right: auto;
+        width: 90%;
+        z-index: -1;
     }
 
     .toggle {
