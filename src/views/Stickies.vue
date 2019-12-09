@@ -12,8 +12,12 @@
         </div>
         <div class = "lala" v-else>
         <vue-draggable-resizable
+            class-name-dragging = "my-dragging-class"
+            class-name-resizing = "my-resizing-class"
             class-name="my-class"
             class-name-active="my-active-class"
+            
+        
             v-for="element in elements"
             :key="element._id"
             :x="element.x"
@@ -25,35 +29,39 @@
             :max-width="1000"
             :max-height="1000"
             :resizable="true"
-            :z-index="element.z_index"
             :parent="true"
             @resizing="(left, top, width, height) => resizing(element._id, left, top, width, height)" 
     
             @dragging="(left, top) => dragging(element._id, left, top)"
             @dragstop="(left, top) => dragstop(element._id, left, top)"
-          >
+          >     <div class="scrollable">
               
-              <!--<vue-draggable-resizable
-              :w="element.width"
-              :h="element.height"
-              :resizable="true"
-              :draggable="false"-->
-              <div class="top_bar">
-                  
-                  <button @click="deleteSticky(element)">X</button>
-              </div>
-              <div
-              class = "scrollable">
-                <h3 class="left">{{element.title}}
-                </h3>
-                <p>{{ element.text }}
-                <br>
-                X: {{ element.x }} / Y: {{ element.y }} 
-                <br>
-                Width: {{ element.width }} / Height: {{ element.height }}
-                </p>
-                </div>
+                  <!--<vue-draggable-resizable
+                  :w="element.width"
+                  :h="element.height"
+                  :resizable="true"
+                  :draggable="false"-->
+                  <div class="top_bar">
+                      
+                      <button @click="deleteSticky(element)">X</button>
+                  </div>
+                  <div>
+                    <h3 class="left">{{element.title}}
+                    </h3>
+                    <p>{{ element.text }}
+                    </p>
+                    <!-- 
+                    <p>
+                    <br>
+                    X: {{ element.x }} / Y: {{ element.y }} 
+                    <br>
+                    Width: {{ element.width }} / Height: {{ element.height }}
+                    </p>
+                    -->
+                    
+                    </div>
               <!--</vue-draggable-resizable>-->
+              </div>
     
           </vue-draggable-resizable>
           </div>
@@ -251,15 +259,19 @@
 
 <style>
     .my-class {
-        background-color: lightgreen;
+        background-color: lightblue;
         border: 1px solid blue;
         /*overflow: hidden;*/
     }
 
 
+    .full_height {
+        height: 100%;
+        overflow: auto;
+    }
 
     .scrollable {
-        background-color: lightblue;
+        /*background-color: lightblue;
         /*opacity: 80%;*/
         height: 100%;
         width: 100%;
@@ -299,20 +311,42 @@
   */
     }
 
-.myStickyForm{
-    background-color: white;
-    height: 80%;
-}
-.toggle{
-    background-color: white;
-}
+    .myStickyForm {
+        background-color: white;
+        height: 80%;
+    }
 
-.toggle:hover{
-    background-color: blue;
-    color: white;
-    cursor: pointer;
-}
-.lala{
-    height: 100%;
-}
+    .toggle {
+        background-color: white;
+        width: 90%;
+        position: fixed;
+        margin-left: auto;
+        margin-right: auto;
+        
+    }
+
+    .toggle:hover {
+        background-color: blue;
+        color: white;
+        cursor: pointer;
+    }
+
+    .lala {
+        height: 10000px;/*%;*/
+        width:  10000px;
+        /*linear-gradient*/
+        background-image: linear-gradient(to bottom right, lightgray 5%, gray 5%, darkgray 5%, black 5%, darkgray 5%, gray 5%, lightgray 5%) ;
+    }
+
+    .my-dragging-class {
+        opacity: 80%;
+        background-color: lightpink;
+        /*border: 1px solid black;*/
+    }
+
+    .my-resizing-class {
+        opacity: 80%;
+        background-color: lightgreen;
+        /*border: 1px solid gre;*/
+    }
 </style>
