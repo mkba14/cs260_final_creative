@@ -168,7 +168,7 @@
                     await this.getStickies();
                     //console.log("remaining stickies: ", this.elements);
                     this.deleteStickies = false;
-                    this.canDrag=true;
+                    this.chgDrag(sticky._id);
                     return true;
                 }
                 catch (error) {
