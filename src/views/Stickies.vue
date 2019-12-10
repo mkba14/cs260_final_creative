@@ -386,9 +386,11 @@
     .outsider{
         position: absolute;
         top: -75px;
+        z-index: 100;
     }
     .outsider_bottom{
         position: absolute;
         bottom: 75px;
+        z-index: 100;
     }
 </style>
