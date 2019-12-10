@@ -1,7 +1,7 @@
 
 // vue.config.js
-let domain = 'cs260.mka11en.com' //'assignments.primbu.com'
-let server = 'http://'+domain+':3005'
+let domain = 'localhost' //'assignments.primbu.com'
+let server = 'http://' + domain + ':3005'
 module.exports = {
     // options...
     devServer: {

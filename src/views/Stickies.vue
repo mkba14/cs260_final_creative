@@ -2,32 +2,34 @@
     <div class = "overlay">
         <div class="toggle" @click="toggleStickyMkr">Make New Sticky!</div>
         <div v-if="mkStickies">
-        <form class = "myStickyForm">
-            <br>
-            <br>
-            <input v-model="title" placeholder="title">
-            <br>
-            <textarea v-model="text" placeholder="description" rows="4" cols="50"></textarea>
-            <br>
-            <button @click="addSticky">Make New Sticky :)</button>
-        </form>
+            <form class = "myStickyForm" @submit.prevent="addSticky">
+                <br>
+                <br>
+                <input v-model="title" placeholder="title">
+                <br>
+                <textarea v-model="text" placeholder="description" rows="4" cols="50"></textarea>
+                <br>
+                <button>Make New Sticky :)</button>
+            </form>
         </div>
-        <div class = "lala" v-else>
+        <div class="lala" v-else>
         <vue-draggable-resizable
             class-name-dragging = "my-dragging-class"
             class-name-resizing = "my-resizing-class"
             class-name="my-class"
             class-name-active="my-active-class"
             
-        
+            :drag-handle="'.scrollable'"
+            :draggable="canDrag"
+
             v-for="element in elements"
             :key="element._id"
             :x="element.x"
             :y="element.y"
             :w="element.width"
             :h="element.height"
-            :min-width="50"
-            :min-height="50"
+            :min-width="100"
+            :min-height="100"
             :max-width="1000"
             :max-height="1000"
             :resizable="true"
@@ -36,34 +38,39 @@
     
             @dragging="(left, top) => dragging(element._id, left, top)"
             @dragstop="(left, top) => dragstop(element._id, left, top)"
-          >     <div class="scrollable">
-              
-                  <!--<vue-draggable-resizable
-                  :w="element.width"
-                  :h="element.height"
-                  :resizable="true"
-                  :draggable="false"-->
-                  <div class="top_bar">
-                      
-                      <button @click="deleteSticky(element)">X</button>
+          >     
+          
+            <div class="outsider" v-if="element._id==current_id">
+                  <div class="modal" v-if="!canDrag">
+                      <p> Permanently Delete Sticky?<br>
+                      <button @click="deleteSticky(element)">Yes</button>  
+                          <button @click="chgDrag(element._id)">No</button>
+                      </p>
                   </div>
-                  <div>
+            </div>
+            <div class="scrollable">
+                <div class="top_bar">
+                    <button @click="chgDrag(element._id)">X</button>
+                </div>
+ 
+                  
+                <div>
                     <h3 class="left">{{element.title}}
                     </h3>
-                    <p>{{ element.text }}
-                    </p>
-                    <!-- 
                     <p>
-                    <br>
-                    X: {{ element.x }} / Y: {{ element.y }} 
-                    <br>
-                    Width: {{ element.width }} / Height: {{ element.height }}
+                        {{ element.text }}
                     </p>
-                    -->
-                    
-                    </div>
-              <!--</vue-draggable-resizable>-->
-              </div>
+                </div>
+            </div>
+            <div class="outsider_2" v-if="element._id==current_id">
+                  <div class="modal" v-if="!canDrag">
+                      <p> Permanently Delete Sticky?<br>
+                      <button @click="deleteSticky(element)">Yes</button>  
+                          <button @click="chgDrag(element._id)">No</button>
+                      </p>
+                  </div>
+            </div>
+              
     
           </vue-draggable-resizable>
           </div>
@@ -85,6 +92,9 @@
                 title: "",
                 text: "",
                 mkStickies: false,
+                deleteStickies: false,
+                canDrag: true,
+                current_id: "",
             }
         },
         created() {
@@ -103,6 +113,17 @@
             });
         },
         methods: {
+            chgDrag(id) {
+                if (this.canDrag) {
+                    this.current_id = id;
+                    this.canDrag = false;
+                }
+                else {
+                    this.canDrag = true;
+                    this.current_id= "";
+                }
+                //this.canDrag = !this.canDrag;
+            },
             toggleStickyMkr() {
                 if (this.mkStickies === false) {
                     this.mkStickies = true;
@@ -126,13 +147,15 @@
             async addSticky() {
                 console.log("upload");
                 try {
-
+                    console.log(this.title);
                     await axios.post('/api/notes', {
                         title: this.title,
                         text: this.text
                     });
                     this.text = "";
                     this.title = "";
+                    console.log("TURNING OFF");
+                    this.mkStickies = false;
                 }
                 catch (error) {
                     console.log("What doesn't it work?");
@@ -143,10 +166,12 @@
 
             async deleteSticky(sticky) {
                 try {
+                    this.deleteStickies = true;
                     console.log("deleting sticky: ", sticky);
                     await axios.delete('/api/notes/' + sticky._id);
                     await this.getStickies();
                     console.log("remaining stickies: ", this.elements);
+                    this.deleteStickies = false;
                     return true;
                 }
                 catch (error) {
@@ -154,7 +179,7 @@
                 }
             },
 
-            async editSticky(sticky) {
+            async moveSticky(sticky) {
                 try {
                     //console.log("Edit ", sticky);
                     await axios.put("/api/notes/" +
@@ -168,7 +193,7 @@
                     return true;
                 }
                 catch (error) {
-                    console.log("Cannot edit:")
+                    console.log("Cannot move:")
                     console.log(error);
                 }
             },
@@ -188,12 +213,6 @@
                     if (el._id !== id) {
                         el.x += deltaX;
                         el.y += deltaY;
-                        if (el.x < 0) {
-                            el.x = 0;
-                        }
-                        if (el.y < 0) {
-                            el.y = 0;
-                        }
                         //el.z_index = 100;
                     }
 
@@ -205,7 +224,7 @@
                     if (el._id === id) {
                         el.x = left;
                         el.y = top;
-                        this.editSticky(el);
+                        this.moveSticky(el);
                         //el.z_index = 100;
                     }
                     return el;
@@ -237,7 +256,9 @@
                         el.y = top;
                         el.width = width;
                         el.height = height;
-                        this.editSticky(el);
+                        if (!this.deleteStickies) {
+                            this.moveSticky(el);
+                        }
                     }
 
 
@@ -274,16 +295,21 @@
     }
 
     .scrollable {
-        /*background-color: lightblue;
-        /*opacity: 80%;*/
         height: 100%;
         width: 100%;
         overflow: auto;
+
+    }
+
+    .top_bar {
+        /* position: absolute;
+        top: 20px;*/
     }
 
     .top_bar>button {
         float: right;
-        height: 10px;
+        margin: 1%;
+        /*height: 10px;*/
     }
 
     button {
@@ -331,7 +357,7 @@
         position: fixed;
         margin-left: auto;
         margin-right: auto;
-        
+
     }
 
     .toggle:hover {
@@ -341,10 +367,11 @@
     }
 
     .lala {
-        height: 10000px;/*%;*/
-        width:  10000px;
+        height: 10000px;
+        /*%;*/
+        width: 10000px;
         /*linear-gradient*/
-        background-image: linear-gradient(to bottom right, lightgray 5%, gray 5%, darkgray 5%, black 5%, darkgray 5%, gray 5%, lightgray 5%) ;
+        background-image: linear-gradient(to bottom right, lightgray 5%, gray 5%, darkgray 5%, black 5%, darkgray 5%, gray 5%, lightgray 5%);
     }
 
     .my-dragging-class {
@@ -357,5 +384,23 @@
         opacity: 80%;
         background-color: lightgreen;
         /*border: 1px solid gre;*/
+    }
+    .modal {
+        float: left;
+        background-color: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+        transition: all .3s ease;
+        width: 200px;
+        height: 70px;
+        padding-left: 2%;
+        padding-right: 2%;
+    }
+    .outsider{
+        position: absolute;
+        top: -75px;
+    }
+    .outsider_bottom{
+        position: absolute;
+        bottom: 75px;
     }
 </style>
