@@ -34,7 +34,7 @@
             :resizable="true"
             :parent="true"
             @resizing="(left, top, width, height) => resizing(element._id, left, top, width, height)" 
-    
+            @resizestop="moveSticky(element)"
             @dragging="(left, top) => dragging(element._id, left, top)"
             @dragstop="(left, top) => dragstop(element._id, left, top)"
           >     
@@ -253,9 +253,9 @@
                         el.y = top;
                         el.width = width;
                         el.height = height;
-                        if (!this.deleteStickies) {
+                        /*if (!this.deleteStickies) {
                             this.moveSticky(el);
-                        }
+                        }*/
                     }
 
 
