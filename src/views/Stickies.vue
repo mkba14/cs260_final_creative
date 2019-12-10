@@ -21,7 +21,6 @@
             
             :drag-handle="'.scrollable'"
             :draggable="canDrag"
-
             v-for="element in elements"
             :key="element._id"
             :x="element.x"
@@ -52,8 +51,6 @@
                 <div class="top_bar">
                     <button @click="chgDrag(element._id)">X</button>
                 </div>
- 
-                  
                 <div>
                     <h3 class="left">{{element.title}}
                     </h3>
@@ -71,7 +68,6 @@
                   </div>
             </div>
               
-    
           </vue-draggable-resizable>
           </div>
     </div>
@@ -154,7 +150,7 @@
                     });
                     this.text = "";
                     this.title = "";
-                    console.log("TURNING OFF");
+                    //console.log("TURNING OFF");
                     this.mkStickies = false;
                 }
                 catch (error) {
@@ -170,8 +166,9 @@
                     console.log("deleting sticky: ", sticky);
                     await axios.delete('/api/notes/' + sticky._id);
                     await this.getStickies();
-                    console.log("remaining stickies: ", this.elements);
+                    //console.log("remaining stickies: ", this.elements);
                     this.deleteStickies = false;
+                    this.canDrag=true;
                     return true;
                 }
                 catch (error) {
@@ -301,11 +298,6 @@
 
     }
 
-    .top_bar {
-        /* position: absolute;
-        top: 20px;*/
-    }
-
     .top_bar>button {
         float: right;
         margin: 1%;
@@ -334,10 +326,6 @@
         overflow: scroll;
         overflow-x: scroll;
         overflow-y: scroll;
-        /*
-  overflow-y: hidden;
-  overflow-x: visible;
-  */
     }
 
     .myStickyForm {

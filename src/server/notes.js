@@ -52,7 +52,7 @@ router.post('/', async(req, res) => {
 
 router.delete('/:id', async(req, res) => {
   try {
-    //console.log("deleting note: ", req.params)
+    console.log("deleting note")//, req.params)
     await Note.deleteOne({
       _id: req.params.id
     });
