@@ -359,7 +359,9 @@
         /*%;*/
         width: 10000px;
         /*linear-gradient*/
-        background-image: linear-gradient(to bottom right, lightgray 5%, gray 5%, darkgray 5%, black 5%, darkgray 5%, gray 5%, lightgray 5%);
+        background-color: #dbdbdb;
+        background-image: linear-gradient(to bottom right, #dbdbdb, #b3b3b3, #828282, #404040)/*lightgray, darkgray, black);/*lightgray 5%, gray 5%, darkgray 5%, black 5%, darkgray 5%, gray 5%, lightgray 5%);
+        */
     }
 
     .my-dragging-class {
