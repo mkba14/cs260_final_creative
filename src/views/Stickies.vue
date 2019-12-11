@@ -296,17 +296,18 @@
     .scrollable {
         height: 100%;
         width: 100%;
-        margin-left: 5%;
+       /* margin-left: 5%;
         margin-right: 5%;
+        */
         overflow: auto;
-        overflow-x: scroll;
-        overflow-y: scroll;
+        /*overflow-x: scroll;
+        overflow-y: scroll;*/
 
     }
 
     .top_bar>button {
         float: right;
-        margin: 1%;
+        /*margin: 1%;
         /*height: 10px;*/
     }
 
