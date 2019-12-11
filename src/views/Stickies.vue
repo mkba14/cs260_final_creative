@@ -305,7 +305,12 @@
     }
 
     button {
+        border-radius: 20%;
         cursor: pointer;
+    }
+    
+    button:hover{
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
     }
 
     .board {
@@ -338,6 +343,7 @@
         width: 90%;
         z-index: -1;
     }
+    
 
     .toggle {
         background-color: white;
@@ -352,6 +358,7 @@
         background-color: blue;
         color: white;
         cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
     }
 
     .lala {
