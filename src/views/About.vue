@@ -23,7 +23,7 @@
           <div class="polaroid right-margin">
             <img src="./../assets/m.jpeg" alt=""/> 
             <div class="pic-container">
-              <p class="medium-font">Razzle Dazzle</p>
+              <p class="medium-font">Starkid</p>
             </div>
           </div>
       </div>
