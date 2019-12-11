@@ -60,14 +60,6 @@
                     </p>
                 </div>
             </div>
-            <div class="outsider_2" v-if="element._id==current_id">
-                  <div class="modal" v-if="!canDrag">
-                      <p> Permanently Delete Sticky?<br>
-                      <button @click="deleteSticky(element)">Yes</button>  
-                          <button @click="chgDrag(element._id)">No</button>
-                      </p>
-                  </div>
-            </div>
               
           </vue-draggable-resizable>
           </div>
@@ -401,12 +393,8 @@
     }
     .outsider{
         position: absolute;
-        top: -75px;
+        top: 0px;
         z-index: 100;
     }
-    .outsider_bottom{
-        position: absolute;
-        bottom: 75px;
-        z-index: 100;
-    }
+    
 </style>
