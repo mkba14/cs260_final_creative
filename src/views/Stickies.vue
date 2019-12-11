@@ -42,6 +42,9 @@
           
             <div class="outsider" v-if="element._id==current_id">
                   <div class="modal" v-if="!canDrag">
+                      <div class="top_bar">
+                        <button @click="chgDrag(element._id)">Exit</button>
+                      </div>
                       <p> Permanently Delete Sticky?<br>
                       <button @click="deleteSticky(element)">Yes</button>  
                           <button @click="chgDrag(element._id)">No</button>
@@ -278,6 +281,10 @@
         border: 1px solid blue;
         /*overflow: hidden;*/
     }
+    
+    .my-class:hover{
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+    }
 
 
     .full_height {
@@ -288,19 +295,11 @@
     .scrollable {
         height: 100%;
         width: 100%;
-       /* margin-left: 5%;
-        margin-right: 5%;
-        */
         overflow: auto;
-        /*overflow-x: scroll;
-        overflow-y: scroll;*/
-
     }
 
     .top_bar>button {
         float: right;
-        /*margin: 1%;
-        /*height: 10px;*/
     }
 
     button {
@@ -383,11 +382,11 @@
     }
     .modal {
         float: left;
-        background-color: white;
+        background-color: lightyellow;
         box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
         transition: all .3s ease;
-        width: 200px;
-        height: 70px;
+        width: 100%;
+        
         padding-left: 2%;
         padding-right: 2%;
     }
