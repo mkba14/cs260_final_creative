@@ -296,9 +296,11 @@
     .scrollable {
         height: 100%;
         width: 100%;
-        padding-left: 2%;
-        padding-right: 2%;
+        margin-left: 5%;
+        margin-right: 5%;
         overflow: auto;
+        overflow-x: scroll;
+        overflow-y: scroll;
 
     }
 
