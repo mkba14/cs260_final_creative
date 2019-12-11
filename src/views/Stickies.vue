@@ -21,6 +21,7 @@
             
             :drag-handle="'.scrollable'"
             :draggable="canDrag"
+            :resizable="canDrag"
             v-for="element in elements"
             :key="element._id"
             :x="element.x"
@@ -31,7 +32,7 @@
             :min-height="100"
             :max-width="1000"
             :max-height="1000"
-            :resizable="true"
+            
             :parent="true"
             @resizing="(left, top, width, height) => resizing(element._id, left, top, width, height)" 
             @resizestop="moveSticky(element)"
@@ -90,6 +91,7 @@
                 mkStickies: false,
                 deleteStickies: false,
                 canDrag: true,
+                canResize: true,
                 current_id: "",
             }
         },
@@ -278,7 +280,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .my-class {
         background-color: lightblue;
         border: 1px solid blue;
@@ -294,6 +296,8 @@
     .scrollable {
         height: 100%;
         width: 100%;
+        padding-left: 2%;
+        padding-right: 2%;
         overflow: auto;
 
     }
